@@ -29,5 +29,5 @@ function pygrep() {
         xgrep 'py' $*
 }
 
-source .django-project
-source .current-django-project
+source ~/.django-project
+source ~/.current-django-project
