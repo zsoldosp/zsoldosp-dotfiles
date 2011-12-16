@@ -1,3 +1,5 @@
 *
-!.vim*
 !.gitignore
+!.vimrc
+!.profile
+!.django-project
