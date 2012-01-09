@@ -15,5 +15,5 @@ function shell_plus() {
 }
 
 function runscript() {
-    manage_py runscript  $*
+    manage_py runscript $* --traceback
 }
