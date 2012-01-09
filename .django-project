@@ -10,3 +10,10 @@ function manage_py() {
         python $MANAGE_PY $* --settings=${DJANGO_CONFIG}
 }
 
+function shell_plus() {
+    manage_py shell_plus $*
+}
+
+function runscript() {
+    manage_py runscript  $*
+}
