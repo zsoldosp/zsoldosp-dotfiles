@@ -31,3 +31,4 @@ function pygrep() {
 
 source ~/.django-project
 source ~/.current-django-project
+source ~/.svnhelpers

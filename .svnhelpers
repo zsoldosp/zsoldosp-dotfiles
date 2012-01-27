@@ -1,0 +1,5 @@
+#!/bin/bash
+
+function xargs_unkown_svn_files() {
+    svn st | grep ^? | sed 's/^?[ ]*//g' | xargs $*
+}
