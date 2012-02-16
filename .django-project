@@ -3,7 +3,14 @@ DJANGO_CONFIG=settings
 DJANGO_TEST_CONFIG=settings_test
 DJANGO_TEST_COMMAND=test
 
-function manage_py_test() {
+# TODO: how to get the chroot to work
+#[play] peter@ubuntu$ echo $OLD_PS1
+#\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\w\$
+
+export OLD_PS1=$PS1
+export PS1='[$(echo $DJANGO_CONFIG)] \[\e]0;\u@\h: \w\a\]\u@\h\$ ' # thanks to @grault
+
+function nmanage_py_test() {
         python $MANAGE_PY $DJANGO_TEST_COMMAND $* --settings=${DJANGO_TEST_CONFIG} 2>&1 | tee test.log
 }
 function manage_py() {
