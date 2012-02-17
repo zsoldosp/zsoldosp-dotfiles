@@ -16,7 +16,7 @@ function manage_py_test() {
         $CMD
 }
 function manage_py() {
-        python $MANAGE_PY $* --settings=${DJANGO_CONFIG}
+        verify_valid_django_config_name && python $MANAGE_PY $* --settings=${DJANGO_CONFIG}
 }
 
 function shell_plus() {
@@ -25,4 +25,15 @@ function shell_plus() {
 
 function runscript() {
     manage_py runscript $* --traceback
+}
+
+function verify_valid_django_config_name() {
+    settings_file_path=`dirname $MANAGE_PY`/${DJANGO_CONFIG}
+    settings_file_path=`echo $settings_file_path | sed 's/\\./\\//g'`.py
+    test -f $settings_file_path
+    exit_code=$?
+    if [[ 0 -ne $exit_code ]]; then 
+        echo "Non-existent config file (${settings_file_path})" >&2
+    fi
+    return $exit_code
 }
