@@ -10,10 +10,8 @@ export OLD_PS1=$PS1
 export PS1='[$(echo $DJANGO_CONFIG)] \[\e]0;\u@\h: \w\a\]\u@\h\$ ' # thanks to @grault
 
 function manage_py_test() {
-        CMD="python $MANAGE_PY $DJANGO_TEST_COMMAND $*" 
         test_config=${DJANGO_CONFIG}_test
-        CMD="$CMD --settings=$test_config 2>&1 | tee test.log"
-        $CMD
+        verify_valid_django_config_name && python $MANAGE_PY $DJANGO_TEST_COMMAND $* --settings=${test_config} 2>&1 | tee test.log
 }
 function manage_py() {
         verify_valid_django_config_name && python $MANAGE_PY $* --settings=${DJANGO_CONFIG}
