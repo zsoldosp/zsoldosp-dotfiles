@@ -9,6 +9,28 @@ export DJANGO_TEST_COMMAND=test
 export OLD_PS1=$PS1
 export PS1='[$(echo $DJANGO_CONFIG)] \[\e]0;\u@\h: \w\a\]\u@\h\$ ' # thanks to @grault
 
+function new_django_project() {
+    proj_name=$1
+    if [[ $proj_name == '' ]]; then
+        echo 'project name not provided' >&2
+        return 1
+    fi
+    proj_folder=~/$proj_name
+    mkdir -p $proj_folder
+    git init $proj_folder
+    site_packages=$proj_folder/site-packages
+    mkdir $site_packages
+    ln -s ~/django-1.3 $site_packages/django
+    export PYTHONPATH=$site_packages
+    old_dir=`pwd`
+    cd $proj_name
+    $site_packages/django/bin/django-admin.py startproject $proj_name
+    git add *
+    git commit -m"skeleton django project created for ${proj_name}"
+    cd $old_dir
+    export     
+}
+
 function manage_py_test() {
         test_config=${DJANGO_CONFIG}_test
         verify_valid_django_config_name && python $MANAGE_PY $DJANGO_TEST_COMMAND $* --settings=${test_config} 2>&1 | tee test.log
