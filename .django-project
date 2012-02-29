@@ -1,13 +1,29 @@
 export MANAGE_PY=/path/to/manage_py
 export DJANGO_CONFIG=settings
 export DJANGO_TEST_COMMAND=test
+export DJANGO_PROJECT="no project"
 
 # TODO: how to get the chroot to work
 #[play] peter@ubuntu$ echo $OLD_PS1
 #\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\w\$
 
 export OLD_PS1=$PS1
-export PS1='[$(echo $DJANGO_CONFIG)] \[\e]0;\u@\h: \w\a\]\u@\h\$ ' # thanks to @grault
+export PS1='[$(echo $DJANGO_PROJECT) - $(echo $DJANGO_CONFIG)] \[\e]0;\u@\h: \w\a\]\u@\h\$ ' # thanks to @grault
+
+function pypath_update_for_settings() {
+    echo import os
+    echo import sys
+    echo "PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))"
+    echo "sys.path.append(os.path.join(PROJECT_ROOT, '..', 'site-packages'))"
+    echo "sys.path.append(PROJECT_ROOT)"
+}
+
+function pypath_update_for_manage_py() {
+    echo import os
+    echo import sys
+    echo "PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))"
+    echo "sys.path.append(PROJECT_ROOT)"
+}
 
 function new_django_project() {
     proj_name=$1
@@ -25,10 +41,21 @@ function new_django_project() {
     old_dir=`pwd`
     cd $proj_name
     $site_packages/django/bin/django-admin.py startproject $proj_name
-    git add *
+    cd $proj_name
+    mkdir settings
+    touch settings/__init__.py
+    (pypath_update_for_settings; cat settings.py) > settings/base.py
+    echo "from settings.base import *" > settings/devel.py
+    echo "from settings.devel import *" > settings/devel_test.py
+    (pypath_update_for_manage_py; cat manage.py) > manage.py.tmp
+    mv manage.py.tmp manage.py
+    cd ..
+    git add . 
     git commit -m"skeleton django project created for ${proj_name}"
     cd $old_dir
-    export     
+    export MANAGE_PY=$proj_folder/$proj_name/manage.py
+    export DJANGO_CONFIG=settings.devel
+    export DJANGO_PROJECT=$proj_name
 }
 
 function manage_py_test() {
