@@ -50,12 +50,15 @@ function new_django_project() {
     (pypath_update_for_manage_py; cat manage.py) > manage.py.tmp
     mv manage.py.tmp manage.py
     cd ..
-    git add . 
+    project_profile_file=`pwd`/.project_profile
+    echo "export MANAGE_PY=$proj_folder/$proj_name/manage.py" > $project_profile_file
+    echo "export DJANGO_CONFIG=settings.devel" >> $project_profile_file
+    echo "export DJANGO_PROJECT=$proj_name"  >> $project_profile_file
+    git add . $project_profile_file
     git commit -m"skeleton django project created for ${proj_name}"
     cd $old_dir
-    export MANAGE_PY=$proj_folder/$proj_name/manage.py
-    export DJANGO_CONFIG=settings.devel
-    export DJANGO_PROJECT=$proj_name
+    source $project_profile_file
+    ln -s $project_profile_file ~/.current-django-project
 }
 
 function manage_py_test() {
@@ -74,6 +77,9 @@ function runscript() {
     manage_py runscript $* --traceback
 }
 
+function runserver() {
+    manage_py runserver 0.0.0.0:8080 $*
+}
 function verify_valid_django_config_name() {
     settings_file_path=`dirname $MANAGE_PY`/${DJANGO_CONFIG}
     settings_file_path=`echo $settings_file_path | sed 's/\\./\\//g'`.py
