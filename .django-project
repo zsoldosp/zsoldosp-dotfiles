@@ -47,6 +47,7 @@ function new_django_project() {
     (pypath_update_for_settings; cat settings.py) > settings/base.py
     echo "from settings.base import *" > settings/devel.py
     echo "from settings.devel import *" > settings/devel_test.py
+    rm settings.py
     (pypath_update_for_manage_py; cat manage.py) > manage.py.tmp
     mv manage.py.tmp manage.py
     cd ..
@@ -58,7 +59,7 @@ function new_django_project() {
     git commit -m"skeleton django project created for ${proj_name}"
     cd $old_dir
     source $project_profile_file
-    ln -s $project_profile_file ~/.current-django-project
+    ln -fs $project_profile_file ~/.current-django-project
 }
 
 function manage_py_test() {
