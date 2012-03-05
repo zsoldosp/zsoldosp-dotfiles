@@ -3,6 +3,7 @@ export DJANGO_CONFIG=settings
 export DJANGO_TEST_COMMAND=test
 export DJANGO_PROJECT="no project"
 
+# TODO: change currnet project helper method - validate the is a .django settings file, and update symlink, and disallow illegal values
 # TODO: how to get the chroot to work
 #[play] peter@ubuntu$ echo $OLD_PS1
 #\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\w\$
@@ -27,6 +28,7 @@ function pypath_update_for_manage_py() {
 }
 
 function new_django_project() {
+    # TODO: error handling, e.g.: clean up when fails for invalid project name, e.g.: django-formstesting
     proj_name=$1
     if [[ $proj_name == '' ]]; then
         echo 'project name not provided' >&2
