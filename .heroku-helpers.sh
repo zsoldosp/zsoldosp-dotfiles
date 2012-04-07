@@ -8,6 +8,7 @@ function init-heroku-env() {
     chmod 755 $heroku_install_file
     $heroku_install_file
     heroku login
+    sudo apt-get install postgresql libpq-dev
 }
 
 function init-heroku-project() {
@@ -21,4 +22,5 @@ function init-heroku-project() {
     git init
     git add .gitignore
     git commit -m"basic gitignore file"
+    pip install Django psycopg2
 }
