@@ -1,6 +1,6 @@
 #!/bin/bash
 sudo mount /dev/cdrom1 /media/cdrom
-cp /media/cdrom/VMwareTools-*.tar.gz /tmp/
+cp /media/cdrom/VMwareTools-*.tar.gz /tmp/ || (echo "need to make the vmware tools cd available to the VM" && exit 1)
 sudo umount /media/cdrom/
 cd /tmp
 tar xzvf VMwareTools-*.tar.gz
