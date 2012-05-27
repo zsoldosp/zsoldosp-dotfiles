@@ -10,7 +10,6 @@ function ubuntu-needed-packages() {
         ssh-keygen -t rsa -C "$email"
     fi 
     echo "Go to https://github.com/settings/ssh to add it github!"
-
 }
 
 ubuntu-needed-packages
@@ -22,5 +21,12 @@ ls -a $dir_name | while read file; do
     if [[ "$file" == '..' ]]; then
        continue
     fi
+    if [[ "$file" == 'git.' ]]; then
+       continue
+    fi
+    if [[ "$file" == '.gitignore' ]]; then
+       continue
+    fi
     ln -sf $dir_name/$file ~/
 done
+source ~/.profile
