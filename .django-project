@@ -68,6 +68,12 @@ function manage_py_test() {
         test_config=${DJANGO_CONFIG}_test
         verify_valid_django_config_name && python $MANAGE_PY $DJANGO_TEST_COMMAND $* --settings=${test_config} 2>&1 | tee test.log
 }
+
+function manage_py_test_failed_ones_only(){
+    # last set to clean newlines comes from http://www.removelinebreaks.com/information/about/remove_with_sed
+    testcases=`cat test.log | grep "^\(ERROR\|FAIL\):" | sed "s/^\S\+ \(test__\S\+\) (paessler\.\([^.]\+\).*\.\(\S\+\))\s*$/\2.\3.\1/" | sed -n -e ":a" -e "$ s/\n/ /gp;N;b a"`
+    manage_py_test $testcases
+}
 function manage_py() {
         verify_valid_django_config_name && python $MANAGE_PY $* --settings=${DJANGO_CONFIG}
 }
