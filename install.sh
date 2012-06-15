@@ -21,7 +21,7 @@ ls -a $dir_name | while read file; do
     if [[ "$file" == '..' ]]; then
        continue
     fi
-    if [[ "$file" == 'git.' ]]; then
+    if [[ "$file" == '.git' ]]; then
        continue
     fi
     if [[ "$file" == '.gitignore' ]]; then
