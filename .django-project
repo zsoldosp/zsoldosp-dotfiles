@@ -71,7 +71,13 @@ function manage_py_test() {
 
 function manage_py_test_failed_ones_only(){
     # last set to clean newlines comes from http://www.removelinebreaks.com/information/about/remove_with_sed
-    testcases=`cat test.log | grep "^\(ERROR\|FAIL\):" | sed "s/^\S\+ \(test__\S\+\) ([^.]\+\.\([^.]\+\).*\.\(\S\+\))\s*$/\2.\3.\1/" | sed -n -e ":a" -e "$ s/\n/ /gp;N;b a"`
+    # TODO: fails when there is only one failed test, due to the last sed command
+    if [ ! -f test.log ]
+    then
+        echo 'no previous test file, exiting'
+        return
+    fi
+    testcases=`cat test.log | grep "^\(ERROR\|FAIL\):" | sed "s/^\S\+ \(test\S\+\) ([^.]\+\.\([^.]\+\).*\.\(\S\+\))\s*$/\2.\3.\1/" | sed -n -e ":a" -e "$ s/\n/ /gp;N;b a"`
     manage_py_test $testcases
 }
 function manage_py() {
