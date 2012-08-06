@@ -79,11 +79,17 @@ function manage_py_test_failed_ones_only(){
     testcases=`cat test.log | grep "^\(ERROR\|FAIL\):" | sed "s/^\S\+ \(test\S\+\) ([^.]\+\.\([^.]\+\).*\.\(\S\+\))\s*$/\2.\3.\1/"`
     echo $testcases | wc | grep "[0-9]" | while read line word char; do
         echo $line $word $char
-        if [[ "$line" != "1" ]]; then
+        if [[ "$word" == "0" ]]; then
+            echo 'no failed tests. You can $> cp test.log.bkp test.log'
+            testcases=""
+        elif [[ "$line" != "1" ]]; then
             testcases=`echo $testcases | sed -n -e ":a" -e "$ s/\n/ /gp;N;b a"`
         fi
     done
-    manage_py_test $testcases
+    if [[ "$testcases" != "" ]]; then
+        cp test.log test.log.bkp # in case 
+        manage_py_test $testcases
+    fi
 }
 function manage_py() {
         verify_valid_django_config_name && python $MANAGE_PY $* --settings=${DJANGO_CONFIG}
