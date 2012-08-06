@@ -3,3 +3,14 @@
 function xargs_unkown_svn_files() {
     svn st | grep ^? | sed 's/^?[ ]*//g' | xargs $*
 }
+
+function svn_grep_prior_versionse_for() {
+    svn log $1 | grep ^r[0-9] | cut -f 1 -d ' ' | while read $rev; do
+        svn diff -c $rev $1 | grep $2 2>&1 > /dev/null
+        if [[ "$?" = "0" ]]; then
+            echo "match found for expresion $2 under path $1 in revision $rev"
+            svn diff -c $rev $1
+            return 0
+        fi
+    done
+}
