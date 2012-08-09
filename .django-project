@@ -70,6 +70,8 @@ function manage_py_test() {
 }
 
 function manage_py_test_failed_ones_only(){
+    # TODO: if a test prints (bad practice, but can happen) such a line , it fails.: ERROR: Failed to transform Recod <RecordType(PK=101077)> with the data 'some data here': Object matching query does not exist.
+
     # last set to clean newlines comes from http://www.removelinebreaks.com/information/about/remove_with_sed
     if [ ! -f test.log ]
     then
