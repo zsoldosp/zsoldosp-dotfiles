@@ -26,7 +26,7 @@ class Example(unittest.TestCase):
     pass
 
 class ExamplePlusPlus(TestCasePlusPlus):
-    def test__only_example_is_subclass(self):
+    def test__only_exampleplusplus_is_subclass(self):
         self.assert_only_true_for(
             objects_should_be_true_for = [ExamplePlusPlus],
             all_other_objects = [ExamplePlusPlus, Example],
