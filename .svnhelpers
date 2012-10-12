@@ -1,7 +1,11 @@
 #!/bin/bash
 
 function xargs_unkown_svn_files() {
-    svn st | grep ^? | sed 's/^?[ ]*//g' | xargs $*
+    x="$*"
+    if [[ "$x" = "" ]]; then
+        x='ls -l'
+    fi
+    svn st | grep ^? | sed 's/^?[ ]*//g' | xargs $x
 }
 
 function svn_grep_prior_versionse_for() {
