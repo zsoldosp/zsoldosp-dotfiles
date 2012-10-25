@@ -1,8 +1,3 @@
-# TODO: need to get git not to ignore the bin folder
-*
-!./bin/*
-!.gitignore
-!.vimrc
-!.profile
-!.django-project
-!.svnhelpers
+*.pyc
+*~
+*.swp
