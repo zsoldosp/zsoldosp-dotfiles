@@ -92,7 +92,7 @@ function manage_py_test_failed_ones_only(){
     done
     if [[ "$testcases" != "" ]]; then
         cp test.log test.log.bkp # in case 
-        manage_py_test $testcases
+        manage_py_test $testcases $*
     fi
 }
 function manage_py() {
