@@ -26,7 +26,7 @@ function xgrep() {
         find -H `pwd` -name "*.$1" | xargs grep "$2" --exclude-dir=.svn -n
 }
 function pygrep() {
-        xgrep 'py' $*
+        xgrep 'py' $* | grep -v "/migrations/"
 }
 
 function duplicates() {
