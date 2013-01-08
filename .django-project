@@ -80,7 +80,7 @@ function manage_py_test_failed_ones_only(){
         echo 'no previous test file, exiting'
         return
     fi
-    testcases=`cat test.log | grep "^\(ERROR\|FAIL\):" | sed "s/^\S\+ \(test\S\+\) ([^.]\+\.\([^.]\+\).*\.\(\S\+\))\s*$/\2.\3.\1/"`
+    testcases=`cat test.log | grep "^\(ERROR\|FAIL\):" | sed "s/^\S\+ \(test\S\+\) ([^.]\+\.\([^.]\+\).*\.\(\S\+\))\s*$/\2.\3.\1/" | grep -v ' '`
     echo $testcases | wc | grep "[0-9]" | while read line word char; do
         echo $line $word $char
         if [[ "$word" == "0" ]]; then
@@ -126,4 +126,8 @@ function verify_valid_django_config_name() {
 
 function django-initdb() {
     (echo yes; echo `whoami`; echo `whoami`@`whoami`.com; echo `whoami`; echo `whoami`) | manage_py syncdb
+}
+
+function python-exception-type-count() {
+    grep "^[A-Za-z0-9_]\+\(Error\|Exception\)" | sed "s/^\([A-Za-z0-9]\+\).*$/\1/g"  | sort | uniq -c
 }
