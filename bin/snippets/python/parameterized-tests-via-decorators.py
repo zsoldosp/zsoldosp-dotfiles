@@ -5,6 +5,10 @@ import unittest
     tests (*) similar to NUnit's attributes. 
 
     And this proof of concept/spike is successful too!
+    
+    TODO: might be worth learning about metaclasses, though
+    that might be contrary to my decorator-only based approach
+    https://github.com/msabramo/python_unittest_parameterized_test_case/blob/master/parameterizedtestcase/__init__.py
 
     (*) I know there are already existing solutions, such as 
             http://pytest.org/latest/example/parametrize.html
