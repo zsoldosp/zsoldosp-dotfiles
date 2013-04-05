@@ -22,8 +22,13 @@ class TestClientDoesNotClearRaisedExceptions(TestCase):
         cls.urls = cls
         super(TestClientDoesNotClearRaisedExceptions, cls).setUpClass()
 
-    def test_after_raised_exception_can_get_next(self):
+    def test_repro_from_the_end_users_perspective(self):
         self.assertEquals(200, self.client.get('/no-exception/').status_code, 'as a first request, no exception is raised')
         self.assertRaises(ValueError, lambda: self.client.get('/raise-exception/'))
         self.assertEquals(200, self.client.get('/no-exception/').status_code, 'despite the previous request raising an exception, I should be able to perform another request')
+
+    def test__root_cause(self):
+        self.assertRaises(ValueError, lambda: self.client.get('/raise-exception/'))
+        self.assertEquals(None, self.client.exc_info, 'should have cleared client.exc_info, but did not - it is %s' % self.client.exc_info)
+
 
