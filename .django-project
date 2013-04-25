@@ -104,7 +104,8 @@ function shell_plus() {
 }
 
 function runscript() {
-    manage_py runscript $* --traceback
+    script_name=`basename $1 | sed 's/\.py$//g'`
+    manage_py runscript $script_name --traceback $2 $3 $4 $5 $6 $7 $8 $9
 }
 
 function runserver() {
