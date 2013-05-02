@@ -33,6 +33,10 @@ function duplicates() {
     sort | uniq -d
 }
 
+function filextensions() {
+    find . -type f | sed 's/.*\/\([^/]\+\)$/\1/g' | grep '\.' | sed 's/^.*\.\(\S\+\)$/\1/g' | sort -u
+}
+
 source ~/.django-project
 source ~/.current-django-project
 source ~/.svnhelpers
