@@ -92,7 +92,9 @@ function manage_py_test_failed_ones_only(){
     done
     if [[ "$testcases" != "" ]]; then
         cp test.log test.log.bkp # in case 
-        manage_py_test $testcases $*
+        cmd="manage_py_test $testcases $*"
+        echo $cmd
+        $cmd
     fi
 }
 function manage_py() {
@@ -131,4 +133,8 @@ function django-initdb() {
 
 function python-exception-type-count() {
     grep "^[A-Za-z0-9_]\+\(Error\|Exception\)" | sed "s/^\([A-Za-z0-9]\+\).*$/\1/g"  | sort | uniq -c
+}
+
+function pyversionof() {
+    python -c"import $1; print $1.__version__, $1.__file__"
 }
