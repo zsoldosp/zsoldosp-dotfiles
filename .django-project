@@ -69,7 +69,7 @@ function manage_py_test() {
         verify_valid_django_config_name && python $MANAGE_PY $DJANGO_TEST_COMMAND $* --settings=${test_config} 2>&1 | tee test.log
 }
 
-function manage_py_test_failed_ones_only(){
+function failed_django_tests() {
     # TODO: if a test prints (bad practice, but can happen) such a line , it fails.: ERROR: Failed to transform Recod <RecordType(PK=101077)> with the data 'some data here': Object matching query does not exist.
     # TODO: also fails on setupclass errors ERROR: setUpClass (foo.app.tests.MyTestCase)
 
@@ -80,7 +80,11 @@ function manage_py_test_failed_ones_only(){
         echo 'no previous test file, exiting'
         return
     fi
-    testcases=`cat test.log | grep "^\(ERROR\|FAIL\):" | sed "s/^\S\+ \(test\S\+\) ([^.]\+\.\([^.]\+\).*\.\(\S\+\))\s*$/\2.\3.\1/" | grep -v ' '`
+    cat test.log | grep "^\(ERROR\|FAIL\):" | sed "s/^\S\+ \(test\S\+\) ([^.]\+\.\([^.]\+\).*\.\(\S\+\))\s*$/\2.\3.\1/" | grep -v ' '
+}
+
+function manage_py_test_failed_ones_only(){
+    testcases=`failed_django_tests`
     echo $testcases | wc | grep "[0-9]" | while read line word char; do
         echo $line $word $char
         if [[ "$word" == "0" ]]; then
