@@ -1,0 +1,2 @@
+from somemodule import function_of_interest
+print function_of_interest.__code__.co_varnames
