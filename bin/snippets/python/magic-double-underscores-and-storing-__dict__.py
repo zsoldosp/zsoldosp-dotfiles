@@ -23,6 +23,7 @@ class GoodWayToDoItSingleUnderscore(object):
         self._orig_values = set((k, v) for (k, v) in self.__dict__.iteritems())
 
 class AnotherBadWayToDoItAkaMagicTwoUnderscores(object):
+    """ see http://docs.python.org/2/tutorial/classes.html#private-variables-and-class-local-references """
     def __init__(self):
         self.__orig_values = set((k, v) for (k, v) in self.__dict__.iteritems())
 
