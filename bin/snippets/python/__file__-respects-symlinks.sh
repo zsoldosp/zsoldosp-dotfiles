@@ -8,3 +8,4 @@ python real.py # prints real.py
 python symlink.py # prints symlink.py
 
 cd -
+rm -rf $tmp_dir
