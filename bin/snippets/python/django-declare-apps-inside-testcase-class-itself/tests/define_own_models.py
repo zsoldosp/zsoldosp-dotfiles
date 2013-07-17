@@ -17,11 +17,11 @@ def create_model_at_runtime(app_name, *model_classes):
             style = color.no_style()
             cursor = connection.cursor()
             statements, pending = connection.creation.sql_create_model(model_cls, style)
-        for sql in statements:
-            try:
-                cursor.execute(sql)
-            except Exception as e:
-                raise Exception('%s\nSQL was:\n%s' % (e, sql))
+            for sql in statements:
+                try:
+                    cursor.execute(sql)
+                except Exception as e:
+                    raise Exception('%s\nSQL was:\n%s' % (e, sql))
     register_models(app_name, *model_classes)
 
 
