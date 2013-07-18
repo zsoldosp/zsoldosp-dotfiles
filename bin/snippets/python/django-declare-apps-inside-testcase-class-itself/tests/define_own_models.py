@@ -10,6 +10,8 @@ from django.core import management
 
 def create_model_at_runtime(app_name, *model_classes):
     """creates a dynamic model for testing purposes. For technical details, see https://code.djangoproject.com/wiki/DynamicModels"""
+    # TODO: django.db.models.base.ModelBase.__call__ actually calles register model
+    #       i.e.: when the class is declared, it is registered automatically (in 1.3)
     for model_cls in model_classes:
         try:
             model_cls.objects.count()
