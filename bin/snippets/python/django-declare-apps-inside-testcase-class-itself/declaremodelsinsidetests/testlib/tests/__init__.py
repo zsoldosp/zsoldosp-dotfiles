@@ -28,3 +28,16 @@ class ModelsAreRegisteredWhenDeclared(TestCase):
                 class NestedModel(models.Model):
                     pass
         self.assertEquals(cls2app_label(ModelsAreRegisteredWhenDeclared), appname.models.NestedModel()._meta.app_label)
+
+    def test_app_label_can_be_overwritten_via_signal(self):
+        def overwrite_app_label(signal, sender):
+            new_model_cls = sender
+            new_model_cls._meta.app_label = 'overwrittenapplabel'
+        models.signals.class_prepared.connect(overwrite_app_label)
+        try:
+            class WillGetCustomAppLabel(models.Model):
+                pass
+            self.assertEquals('overwrittenapplabel', WillGetCustomAppLabel()._meta.app_label)
+            self.assertEquals(WillGetCustomAppLabel, models.get_model('overwrittenapplabel', 'WillGetCustomAppLabel', False))
+        finally:
+            models.signals.class_prepared.disconnect(overwrite_app_label)
