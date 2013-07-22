@@ -1,7 +1,9 @@
 from django.test import TestCase
-from django.db import models 
+from django.db import models, connection, DatabaseError
 from django.conf import settings
+from django.core import management
 import sys
+import StringIO
 
 LIBRARY_NAME = 'testlib'
 
@@ -41,3 +43,34 @@ class ModelsAreRegisteredWhenDeclared(TestCase):
             self.assertEquals(WillGetCustomAppLabel, models.get_model('overwrittenapplabel', 'WillGetCustomAppLabel', False))
         finally:
             models.signals.class_prepared.disconnect(overwrite_app_label)
+
+    def test_even_though_registered_table_does_not_exist(self):
+        class SomeModel(models.Model):
+            pass
+        with self.assertRaises(DatabaseError):
+            SomeModel.objects.count()
+
+    def test_can_create_models_incrementally_via_syncdb(self):
+        class ModelOne(models.Model):
+            pass
+        with stdiocapture() as x:
+            management.call_command('syncdb')
+        self.assertEquals(0, ModelOne.objects.count())
+        class DeclaredAfterSyncDb(models.Model):
+            pass
+        with self.assertRaises(DatabaseError):
+            DeclaredAfterSyncDb.objects.count()
+        with stdiocapture() as x:
+            management.call_command('syncdb')
+        self.assertEquals(0, ModelOne.objects.count(), 'syncdb is incremental')
+
+
+class stdiocapture(object):
+    def __enter__(self):
+        self.orig_stdout = sys.stdout
+        sys.stdout = StringIO.StringIO()
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.captured_stdout = sys.stdout.getvalue()
+        sys.stdout = self.orig_stdout
