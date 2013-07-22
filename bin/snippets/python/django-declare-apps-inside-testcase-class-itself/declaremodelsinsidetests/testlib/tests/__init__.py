@@ -75,6 +75,22 @@ class ModelsAreRegisteredWhenDeclared(TestCase):
         with self.assertRaises(DatabaseError):
             WillBeDropped.objects.count()
 
+    def test_and_it_can_work_with_foreign_keys(self):
+        class Parent(models.Model):
+            pass
+
+        class Child(models.Model):
+            parent = models.ForeignKey(Parent)
+
+        with stdiocapture():
+            management.call_command('syncdb')
+        Child.objects.create(parent=Parent.objects.create())
+        self.assertEquals(1, Child.objects.count())
+        self.assertEquals(1, Parent.objects.count())
+        drop_sql_statements = management.sql.sql_delete(models.get_app(Parent()._meta.app_label), management.color.no_style(), connection)
+        for drop_sql in drop_sql_statements:
+            connection.cursor().execute(drop_sql)
+
 
 
 class stdiocapture(object):
