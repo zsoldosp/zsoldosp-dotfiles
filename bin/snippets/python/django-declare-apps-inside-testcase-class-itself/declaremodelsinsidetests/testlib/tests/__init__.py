@@ -64,6 +64,18 @@ class ModelsAreRegisteredWhenDeclared(TestCase):
             management.call_command('syncdb')
         self.assertEquals(0, ModelOne.objects.count(), 'syncdb is incremental')
 
+    def test_after_model_is_destroyed_db_table_is_gone_too(self):
+        class WillBeDropped(models.Model):
+            pass
+        with stdiocapture():
+            management.call_command('syncdb')
+        drop_sql_statements = management.sql.sql_delete(models.get_app(WillBeDropped()._meta.app_label), management.color.no_style(), connection)
+        for drop_sql in drop_sql_statements:
+            connection.cursor().execute(drop_sql)
+        with self.assertRaises(DatabaseError):
+            WillBeDropped.objects.count()
+
+
 
 class stdiocapture(object):
     def __enter__(self):
