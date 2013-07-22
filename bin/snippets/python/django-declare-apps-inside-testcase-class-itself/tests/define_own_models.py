@@ -10,6 +10,8 @@ from django.core import management
 
 def create_model_at_runtime(app_name, *model_classes):
     """creates a dynamic model for testing purposes. For technical details, see https://code.djangoproject.com/wiki/DynamicModels"""
+    # TODO: django.db.models.base.ModelBase.__call__ actually calles register model
+    #       i.e.: when the class is declared, it is registered automatically (in 1.3)
     for model_cls in model_classes:
         try:
             model_cls.objects.count()
@@ -17,11 +19,11 @@ def create_model_at_runtime(app_name, *model_classes):
             style = color.no_style()
             cursor = connection.cursor()
             statements, pending = connection.creation.sql_create_model(model_cls, style)
-        for sql in statements:
-            try:
-                cursor.execute(sql)
-            except Exception as e:
-                raise Exception('%s\nSQL was:\n%s' % (e, sql))
+            for sql in statements:
+                try:
+                    cursor.execute(sql)
+                except Exception as e:
+                    raise Exception('%s\nSQL was:\n%s' % (e, sql))
     register_models(app_name, *model_classes)
 
 
