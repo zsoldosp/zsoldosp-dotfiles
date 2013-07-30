@@ -1,6 +1,17 @@
 from django.conf.urls.defaults import *
 from django.http import HttpResponseRedirect
+"""
+GET index.html HTTP/1.1
+Host: www.example.com
 
+==> HTTP/1.1 400 Bad Request
+
+
+GET /index.html HTTP/1.1
+Host: www.example.com
+
+==> HTTP/1.1 200
+"""
 class myurlpatterns:
     urlpatterns = patterns('',
         url(r'^hello', lambda *a, **kw: HttpResponseRedirect('/'), {}, 'foo'),
