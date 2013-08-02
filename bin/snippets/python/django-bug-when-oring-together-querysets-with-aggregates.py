@@ -33,6 +33,9 @@ assert_query_is( 'SELECT `some_model`.`domain` FROM `some_model` GROUP BY `some_
 google_or_microsoft_domains = google_or_microsoft.values_list('domain', flat=True)
 assert_query_is( 'SELECT `some_model`.`domain` FROM `some_model` WHERE (`some_model`.`domain` = google.com  OR `some_model`.`domain` = microsoft.com )' , google_or_microsoft_domains)
 
+# Thanks, Basti, it works with Q!
+with_q = SomeModel.objects.values_list('domain').annotate(cnt=models.Count('username', distinct=True)).filter(models.Q(cnt__gt=1)|models.Q(domain='microsoft.com')).values_list('domain', flat=True)
+assert_query_is('SELECT `some_model`.`domain` FROM `some_model` GROUP BY `some_model`.`domain`, `some_model`.`domain` HAVING (COUNT(DISTINCT `some_model`.`username`) > 1  OR `some_model`.`domain` = microsoft.com ) ORDER BY NULL' , with_q)
 
 #### HERE START THE BUGS - 1.3 at least ####
 
