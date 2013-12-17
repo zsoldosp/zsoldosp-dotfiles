@@ -18,3 +18,26 @@ function svn_grep_prior_versionse_for() {
         fi
     done
 }
+
+function svn_with_pep8_diff() {
+    if [[ "$SVN_PROJECT_ROOT" == "" ]]; then
+        echo you must set SVN_PROJECT_ROOT variable to where you want to check for pep8 violations
+        return 1
+    fi
+    # \command uses original command, ignoring any aliases
+    # see https://twitter.com/climagic/status/412635955749597184
+    \svn diff $SVN_PROJECT_ROOT | pep8 --diff
+    if [[ "$?" == "0" ]]; then
+        \svn $*
+    fi
+}
+function svn2() {
+    if [[ "$1" == "ci" ]]; then
+        svn_with_pep8_diff $*
+    elif [[ "$1" == "commit" ]]; then
+        svn_with_pep8_diff $*
+    else
+        \svn $*
+    fi
+}
+alias svn="svn2"
