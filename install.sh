@@ -29,4 +29,17 @@ ls -a $dir_name | while read file; do
     fi
     ln -sf $dir_name/$file ~/
 done
+
+function vim-pep8() {
+    sudo pip install pep8 flake8
+    git clone https://github.com/nvie/vim-flake8.git ~/vim-flake8
+    mkdir -p ~/.vim/plugin
+    find ~/vim-flake8/ftplugin -name \*.vim -type f | while read f; do
+        ln -sf $f ~/.vim/ftplugin/
+        ln -sf $f ~/.vim/plugin/
+    done
+}
+
+vim-pep8
+
 source ~/.profile
