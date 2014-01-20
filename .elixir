@@ -1,0 +1,29 @@
+elixir_version=0.12.2
+elixir_basedir=~/learning-elixir
+export PATH="$PATH:${elixir_basedir}/elixir-${elixir_version}/bin/"
+
+function install_elixir() {
+    # TODO: install esl-erlang a'la http://devblog.avdi.org/contact/
+    # TODO: verify appropriate erlang version
+    cd ~/${elixir_basedir}
+    # from http://elixir-lang.org/getting_started/1.html
+    f=elixir-${elixir_version}
+    wget https://github.com/elixir-lang/elixir/archive/v${elixir_version}.tar.gz -O $f.tar.gz
+    tar -zxvf $f.tar.gz
+    cd $f
+    make
+}
+
+function build_test_elixir_master() {
+    cd ${elixir_basedir}
+    git clone https://github.com/elixir-lang/elixir.git elixir-master
+    cd elixir-master
+    make clean test
+}
+
+function install_elixir_vim() {
+    cd ${elixir_basedir} || exit $?
+    git clone git@github.com:elixir-lang/vim-elixir.git || exit $?
+    # TODO: not all files need copying
+    cp ${elixir_basedir}/vim-elixir ~/vim -R || exit $?
+}
