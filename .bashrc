@@ -132,3 +132,4 @@ source ~/.django-project
 source ~/.current-django-project
 source ~/.svnhelpers
 source ~/.elixir
+source ~/.locale
