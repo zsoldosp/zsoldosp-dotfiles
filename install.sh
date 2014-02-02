@@ -1,7 +1,9 @@
 #!/bin/bash
 
 function ubuntu-needed-packages() {
-    sudo apt-get install openssh-server vim git-core
+    sudo add-apt-repository ppa:relan/exfat
+    sudo apt-get update
+    sudo apt-get install openssh-server vim git-core cifs-utils exfat-fuse
     git config --global user.name "Peter Zsoldos"
     (git config --global user.email | grep peter\.zsoldos) || (echo "need to setup your git user.email setting! Use git config --global user.email 'someone@somewhere.tld'" && exit 1)
     if [ ! -f ~/.ssh/id_rsa.pub ]; then
