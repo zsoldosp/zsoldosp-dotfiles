@@ -30,11 +30,44 @@ ls -a $dir_name | while read file; do
     ln -sf $dir_name/$file ~/
 done
 
+function install-python() {
+	wget https://raw.github.com/pypa/pip/master/contrib/get-pip.py -O get-pip.py || exit $?
+	sudo python get-pip.py || exit $?
+    rm get-pip.py
+}
+
+install-python || exit $?
+
+
+function install-github() {
+    username=$1
+    reponame=$2
+    opwd=`pwd`
+    mkdir -p ~/3rdparty
+    cd ~/3rdparty
+    git clone https://github.com/$username/$reponame.git
+    if [[ -f $reponame/setup.py ]]; then
+        cd $reponame
+        sudo python setup.py develop
+        cd ..
+    fi
+    cd $opwd
+}
+function install-3rdparty() {
+    install-github EnigmaCurry blogofile
+    install-github EnigmaCurry blogofile_blog
+}
+
+
+install-3rdparty || exit $?
+
 function vim-pep8() {
-    sudo pip install pep8 flake8
-    git clone https://github.com/nvie/vim-flake8.git ~/vim-flake8
-    mkdir -p ~/.vim/plugin
-    find ~/vim-flake8/ftplugin -name \*.vim -type f | while read f; do
+    sudo pip install pep8 flake8 || exit $?
+    install-github nvie vim-flake8
+    for x in ftplugin plugin; do
+        mkdir -p ~/.vim/$x/
+    done
+    find ~/3rdparty/vim-flake8/ftplugin -name \*.vim -type f | while read f; do
         ln -sf $f ~/.vim/ftplugin/
         ln -sf $f ~/.vim/plugin/
     done
