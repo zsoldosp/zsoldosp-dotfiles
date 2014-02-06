@@ -55,9 +55,15 @@ function install-github() {
     fi
     cd $opwd
 }
-function install-3rdparty() {
+
+function install-blogofile() {
+    sudo pip install distribute
     install-github EnigmaCurry blogofile
     install-github EnigmaCurry blogofile_blog
+}
+
+function install-3rdparty() {
+    install-blogofile
 }
 
 
