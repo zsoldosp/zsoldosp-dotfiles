@@ -133,3 +133,12 @@ source ~/.current-django-project
 source ~/.svnhelpers
 source ~/.elixir
 source ~/.locale
+function add_to_path() {
+    if [ -d "$1" ] ; then
+        export PATH="$1:$PATH"
+    fi
+}
+
+add_to_path $HOME/bin
+add_to_path $HOME/3rdparty/elixir/bin
+add_to_path $HOME/3rdparty/mono/bin
