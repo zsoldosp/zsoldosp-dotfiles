@@ -10,26 +10,49 @@ function install-esl-erlang-if-needed() {
     fi
 }
 
-function install-elixir() {
+function install-elixir-release() {
     version=$1
-    if [[ "version" == "" ]]; then
-        version=0.12.3
-    fi
     owd=`pwd`
     cd ~/3rdparty
     # from http://elixir-lang.org/getting_started/1.html
     f=elixir-${version}
     wget https://github.com/elixir-lang/elixir/archive/v${version}.tar.gz -O $f.tar.gz
-    pwd; ls -al
     rm -rf $f || exit $?
     tar -zxvf $f.tar.gz || exit $?
-    pwd; ls -al
     cd $f
     make
     cd ..
     rm elixir || true
     ln -s $f elixir
     cd $owd
+}
+
+function install-elixir-master() {
+    owd=`pwd`
+    cd ~/3rdparty
+    # from http://elixir-lang.org/getting_started/1.html
+    f=elixir-master
+    if [ -d $f ]; then
+        cd $f
+        git pull 
+        cd -
+    else
+        git clone https://github.com/elixir-lang/elixir/ $f
+    fi
+    cd $f
+    make
+    cd ..
+    rm elixir || true
+    ln -s $f elixir
+    cd $owd
+}
+
+function install-elixir() {
+    if [[ "$1" == "" ]]; then
+        install-elixir-master $*
+    else
+        install-elixir $*
+    fi
 }
 
 install-esl-erlang-if-needed && install-elixir $*
