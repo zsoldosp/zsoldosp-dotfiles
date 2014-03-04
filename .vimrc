@@ -15,5 +15,5 @@ endfunction
 
 if !exists("autocommands_loaded")
     let autocommands_loaded = 1
-    autocmd FileType python call ZspTabsAsSpaces
+    autocmd FileType python call ZspTabsAsSpaces()
 endif
