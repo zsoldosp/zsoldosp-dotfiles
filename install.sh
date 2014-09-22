@@ -1,4 +1,5 @@
 #!/bin/bash
+readonly PROGDIR=$(readlink -m $(dirname $0))
 
 function ubuntu-needed-packages() {
     sudo add-apt-repository ppa:relan/exfat
@@ -42,18 +43,7 @@ install-python || exit $?
 
 
 function install-github() {
-    username=$1
-    reponame=$2
-    opwd=`pwd`
-    mkdir -p ~/3rdparty
-    cd ~/3rdparty
-    git clone https://github.com/$username/$reponame.git
-    if [[ -f $reponame/setup.py ]]; then
-        cd $reponame
-        sudo python setup.py develop
-        cd ..
-    fi
-    cd $opwd
+	$PROGDIR/install/install-github.sh $*
 }
 
 function install-blogofile() {
@@ -69,18 +59,6 @@ function install-3rdparty() {
 
 install-3rdparty || exit $?
 
-function vim-pep8() {
-    sudo pip install pep8 flake8 || exit $?
-    install-github nvie vim-flake8
-    for x in ftplugin plugin; do
-        mkdir -p ~/.vim/$x/
-    done
-    find ~/3rdparty/vim-flake8/ftplugin -name \*.vim -type f | while read f; do
-        ln -sf $f ~/.vim/ftplugin/
-        ln -sf $f ~/.vim/plugin/
-    done
-}
-
-vim-pep8
+$PROGDIR/install/install-vim-flake8.sh
 
 source ~/.profile
