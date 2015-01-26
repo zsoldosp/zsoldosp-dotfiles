@@ -1,0 +1,11 @@
+- hosts: localhost
+  tasks:
+    - name: install apt packages
+      apt: pkg={{ item }} state=installed
+      with_items:
+        - tree
+        - vim
+        - git-core
+        - openssh-server
+        - cifs-utils
+        - exfat-fuse
