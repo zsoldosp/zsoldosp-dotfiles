@@ -128,6 +128,10 @@ function filextensions() {
     find . -type f | sed 's/.*\/\([^/]\+\)$/\1/g' | grep '\.' | sed 's/^.*\.\(\S\+\)$/\1/g' | sort -u
 }
 
+function git-stats-vs-master() {
+    git diff master --numstat |  awk '{added+=$1; removed+=$2} END {print "added " added " removed " removed}'
+}
+
 source ~/.django-project
 source ~/.current-django-project
 source ~/.svnhelpers
