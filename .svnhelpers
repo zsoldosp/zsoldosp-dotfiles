@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -ue
 
 function xargs_unkown_svn_files() {
     x="$*"
